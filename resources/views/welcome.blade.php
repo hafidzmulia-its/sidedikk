@@ -19,7 +19,7 @@
         @endif
     </head>
     <body class="sid-mobile-preview">
-        <main class="sid-mobile-container relative flex min-h-[97vh] flex-col overflow-hidden px-5 pb-6 pt-6">
+        <main class="sid-mobile-container relative flex min-h-[95vh] flex-col overflow-hidden px-5 pb-6 pt-6">
             <div class="flex w-full flex-col items-center space-y-4 text-center">
                 <div class="relative h-32 w-32">
                     <div class="absolute inset-0 flex items-center justify-center rounded-full bg-[var(--color-primary-soft)] shadow-[0_4px_24px_rgba(149,64,158,0.15)]">
@@ -45,11 +45,15 @@
                 <div class="absolute left-10 top-1/2 h-8 w-8 rounded-full border border-[#eedaf1]"></div>
             </div>
 
-            <div class="mt-3 w-full max-w-[280px] space-y-3">
-                <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="sid-button-primary flex h-14 w-full items-center justify-center gap-2 text-sm font-semibold">
-                    Masuk SIDEDIKK
-                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+            <div class="mt-3 w-full max-w-[280px] mx-auto space-y-3">
+                <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="sid-button-primary relative flex h-14 w-full items-center justify-center text-sm font-semibold">
+                    <span class="text-center">Masuk SIDEDIKK</span>
+                    <span class="material-symbols-outlined absolute right-5 text-xl">arrow_forward</span>
                 </a>
+
+                <button type="button" data-pwa-install class="hidden flex h-12 w-full items-center justify-center rounded-full border border-[#d8c3de] bg-white text-sm font-semibold text-[#95409e] shadow-[0_8px_22px_rgba(149,64,158,0.08)] transition-all hover:bg-[#fff7fb]">
+                    Pasang Aplikasi
+                </button>
             </div>
         </main>
     </body>

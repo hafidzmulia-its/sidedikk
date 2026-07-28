@@ -56,56 +56,45 @@ function initializeAdminCharts() {
 
 function registerPwaInstallPrompt() {
     const installButtons = document.querySelectorAll('[data-pwa-install]');
-    const installCooldownKey = 'sidedikk:pwa-install-dismissed-at';
-    const oneDayInMs = 24 * 60 * 60 * 1000;
-
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    const dismissedAt = Number.parseInt(window.localStorage.getItem(installCooldownKey) ?? '0', 10);
+    let deferredPrompt = null;
 
-    if (isStandalone) {
+    function setInstallButtonVisibility(visible) {
+        installButtons.forEach((button) => {
+            button.classList.toggle('hidden', !visible);
+        });
+    }
+
+    function removeInstallSheets() {
+        document.querySelectorAll('[data-pwa-install-sheet]').forEach((sheet) => {
+            sheet.remove();
+        });
+    }
+
+    if (isStandalone || installButtons.length === 0) {
+        setInstallButtonVisibility(false);
         return;
     }
 
-    function setInstallDismissed() {
-        window.localStorage.setItem(installCooldownKey, String(Date.now()));
-    }
-
-    function installRecentlyDismissed() {
-        return Number.isFinite(dismissedAt) && dismissedAt > 0 && (Date.now() - dismissedAt) < oneDayInMs;
-    }
-
-    async function promptInstall(deferredPrompt) {
-        if (!deferredPrompt || installRecentlyDismissed()) {
-            return;
-        }
-
-        deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice.catch(() => null);
-
-        if (!choice || choice.outcome !== 'accepted') {
-            setInstallDismissed();
-        }
-    }
-
-    function createIosInstallSheet() {
-        if (document.querySelector('[data-pwa-ios-sheet]')) {
+    function createInstallSheet({ title, description }) {
+        if (document.querySelector('[data-pwa-install-sheet]')) {
             return;
         }
 
         const overlay = document.createElement('div');
-        overlay.dataset.pwaIosSheet = 'true';
+        overlay.dataset.pwaInstallSheet = 'true';
         overlay.className = 'fixed inset-0 z-[80] flex items-end bg-[#221825]/40 px-4 pb-6 pt-10 sm:items-center sm:justify-center';
         overlay.innerHTML = `
             <div class="w-full max-w-sm rounded-[28px] bg-white p-5 shadow-[0_20px_60px_rgba(34,24,37,0.18)]">
                 <div class="flex items-start justify-between gap-4">
                     <div>
-                        <p class="text-base font-semibold text-[#221825]">Pasang SIDEDIKK</p>
+                        <p class="text-base font-semibold text-[#221825]">${title}</p>
                         <p class="mt-2 text-sm leading-6 text-[#50434e]">
-                            Agar lebih mudah dibuka, ketuk <strong>Bagikan</strong> lalu pilih <strong>Tambah ke Layar Utama</strong>.
+                            ${description}
                         </p>
                     </div>
-                    <button type="button" data-pwa-ios-close class="flex h-10 w-10 items-center justify-center rounded-full bg-[#f7edf9] text-[var(--color-primary)]">
+                    <button type="button" data-pwa-install-close class="flex h-10 w-10 items-center justify-center rounded-full bg-[#f7edf9] text-[var(--color-primary)]">
                         <span class="material-symbols-outlined text-[20px]">close</span>
                     </button>
                 </div>
@@ -113,7 +102,6 @@ function registerPwaInstallPrompt() {
         `;
 
         const dismiss = () => {
-            setInstallDismissed();
             overlay.remove();
         };
 
@@ -123,24 +111,70 @@ function registerPwaInstallPrompt() {
             }
         });
 
-        overlay.querySelector('[data-pwa-ios-close]')?.addEventListener('click', dismiss);
+        overlay.querySelector('[data-pwa-install-close]')?.addEventListener('click', dismiss);
         document.body.appendChild(overlay);
     }
 
+    function showIosInstallSheet() {
+        createInstallSheet({
+            title: 'Pasang SIDEDIKK',
+            description: 'Agar lebih mudah dibuka, ketuk <strong>Bagikan</strong> lalu pilih <strong>Tambah ke Layar Utama</strong>.',
+        });
+    }
+
+    function showBrowserInstallSheet() {
+        createInstallSheet({
+            title: 'Pasang SIDEDIKK',
+            description: 'Jika pop-up belum muncul, buka menu browser lalu pilih <strong>Install app</strong> atau <strong>Tambahkan ke layar utama</strong>.',
+        });
+    }
+
+    async function promptInstall() {
+        if (isIos) {
+            showIosInstallSheet();
+            return;
+        }
+
+        if (!deferredPrompt) {
+            showBrowserInstallSheet();
+            return;
+        }
+
+        removeInstallSheets();
+
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice.catch(() => null);
+
+        if (choice?.outcome === 'accepted') {
+            setInstallButtonVisibility(false);
+        }
+
+        deferredPrompt = null;
+    }
+
+    setInstallButtonVisibility(true);
+
     window.addEventListener('beforeinstallprompt', (event) => {
         event.preventDefault();
-        promptInstall(event);
+        deferredPrompt = event;
+        promptInstall();
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        removeInstallSheets();
+        setInstallButtonVisibility(false);
     });
 
     installButtons.forEach((button) => {
         button.addEventListener('click', async () => {
-            button.classList.add('hidden');
+            await promptInstall();
         });
     });
 
-    if (isIos && !installRecentlyDismissed()) {
+    if (isIos) {
         window.setTimeout(() => {
-            createIosInstallSheet();
+            showIosInstallSheet();
         }, 600);
     }
 }
