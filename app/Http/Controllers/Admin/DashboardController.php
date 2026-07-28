@@ -54,7 +54,7 @@ class DashboardController extends Controller
             return [
                 'labels' => $trendDates->map(fn (CarbonImmutable $date): string => $date->translatedFormat('d M'))->all(),
                 'values' => $trendDates->map(fn (CarbonImmutable $date): int => (int) ($trendData[$date->toDateString()] ?? 0))->all(),
-            ];
+            ]; 
         });
 
         return view('admin.dashboard', [

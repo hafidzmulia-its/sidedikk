@@ -14,7 +14,7 @@
             ['label' => 'Versi', 'value' => '1.0.0'],
             ['label' => 'Platform', 'value' => 'Progressive Web App'],
             ['label' => 'Institusi', 'value' => 'Poltekkes Kemenkes Surabaya'],
-            ['label' => 'Penulis Aplikasi', 'value' => 'Virginia Wulan Anggraini'],
+            ['label' => 'Penulis Aplikasi', 'value' => 'Kharisma Kusumaningtyas'],
         ];
     @endphp
 

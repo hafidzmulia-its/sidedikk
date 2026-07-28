@@ -74,6 +74,7 @@ function registerPwaInstallPrompt() {
 
     if (isStandalone || installButtons.length === 0) {
         setInstallButtonVisibility(false);
+        removeInstallSheets();
         return;
     }
 
@@ -143,11 +144,7 @@ function registerPwaInstallPrompt() {
         removeInstallSheets();
 
         deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice.catch(() => null);
-
-        if (choice?.outcome === 'accepted') {
-            setInstallButtonVisibility(false);
-        }
+        await deferredPrompt.userChoice.catch(() => null);
 
         deferredPrompt = null;
     }
