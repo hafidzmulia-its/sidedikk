@@ -1,0 +1,25 @@
+{
+    "name": "SIDEDIKK - Deteksi Dini Komplikasi Kehamilan",
+    "short_name": "SIDEDIKK",
+    "description": "PWA SIDEDIKK untuk deteksi dini komplikasi kehamilan dengan perlindungan data dan hasil yang tersimpan aman.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#FFFDFE",
+    "theme_color": "#9C36B5",
+    "lang": "id",
+    "icons": [
+        {
+            "src": "/brand/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/brand/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

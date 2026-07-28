@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@source "../views";
+@source "../js";
+
+:root {
+    --color-primary: #9c36b5;
+    --color-primary-dark: #7e2b94;
+    --color-primary-soft: #f2ddf6;
+    --color-secondary: #e85d9e;
+    --color-secondary-soft: #fce8f2;
+    --color-background: #fffdfe;
+    --color-surface: #ffffff;
+    --color-text: #2d2530;
+    --color-text-muted: #6b6470;
+    --color-border: #e9dfea;
+    --color-success: #238a57;
+    --color-warning: #a96900;
+    --color-danger: #c83e50;
+    --color-info: #346fc2;
+    --shadow-soft: 0 18px 40px rgba(156, 54, 181, 0.08);
+    --shadow-card: 0 8px 24px rgba(45, 37, 48, 0.08);
+    --shadow-ambient: 0 4px 12px rgba(149, 64, 158, 0.06);
+    --radius-card: 1rem;
+    --radius-button: 0.75rem;
+}
+
+@theme {
+    --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@layer base {
+    html {
+        color: var(--color-text);
+        background-color: #fff;
+    }
+
+    body {
+        min-height: max(884px, 100dvh);
+        background: #fff;
+        color: var(--color-text);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+        border-color: var(--color-border);
+    }
+
+    button,
+    [role="button"],
+    a {
+        min-height: 44px;
+    }
+
+    input,
+    select,
+    textarea {
+        min-height: 48px;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        min-height: 1rem;
+    }
+}
+
+@layer components {
+    .sid-shell {
+        @apply min-h-screen bg-white;
+    }
+
+    .sid-container {
+        @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .sid-mobile-preview {
+        @apply min-h-screen bg-white;
+    }
+
+    .sid-mobile-container {
+        @apply mx-auto min-h-screen w-full max-w-[480px] bg-white;
+    }
+
+    .sid-card {
+        background: #fff;
+        box-shadow: var(--shadow-ambient);
+        border-radius: var(--radius-card);
+        @apply border;
+    }
+
+    .sid-button-primary {
+        background: #95409e;
+        border-radius: 9999px;
+        @apply inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98];
+        --tw-ring-color: rgba(156, 54, 181, 0.35);
+    }
+
+    .sid-button-secondary {
+        background: #fff;
+        border-radius: 9999px;
+        @apply inline-flex items-center justify-center border px-5 py-3 text-sm font-semibold text-slate-700 transition duration-200 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2;
+        --tw-ring-color: rgba(156, 54, 181, 0.18);
+    }
+
+    .sid-input {
+        @apply mt-2 block w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 shadow-sm transition duration-200 placeholder:text-slate-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2;
+        --tw-ring-color: rgba(156, 54, 181, 0.18);
+    }
+
+    .sid-label {
+        @apply text-sm font-semibold text-slate-800;
+    }
+
+    .sid-section-title {
+        @apply text-2xl font-bold tracking-tight text-slate-900;
+    }
+
+    .sid-app-bar {
+        @apply sticky top-0 z-20 flex h-14 items-center justify-between bg-white px-5;
+    }
+
+    .sid-top-icon {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-primary)] transition hover:bg-[var(--color-primary-soft)] active:scale-95;
+    }
+
+    .sid-field {
+        @apply w-full rounded-xl border border-[#d3c1d0] bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm transition placeholder:text-[#82737f] focus:border-[var(--color-primary)] focus:outline-none focus:ring-2;
+        --tw-ring-color: rgba(149, 64, 158, 0.16);
+    }
+
+    .sid-helper {
+        @apply text-xs font-normal text-[#50434e];
+    }
+
+    .sid-title-main {
+        @apply text-[28px] font-bold leading-[36px] tracking-[-0.02em] text-[#221825];
+    }
+
+    .sid-title-page {
+        @apply text-[22px] font-semibold leading-[30px] tracking-[-0.01em] text-[#221825];
+    }
+
+    .sid-card-title {
+        @apply text-sm font-medium text-[#221825];
+    }
+
+    .sid-score {
+        @apply font-bold text-[#221825];
+    }
+
+    .sid-table-scroll {
+        @apply overflow-auto overscroll-contain;
+        max-height: min(70vh, 34rem);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-gutter: stable both-edges;
+    }
+}
+
+@layer utilities {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+    .sid-no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .sid-no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .sid-mobile-preview {
+        display: flex;
+        justify-content: center;
+        background: #f3f4f6;
+    }
+
+    .sid-mobile-container {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+    }
+}
