@@ -17,11 +17,11 @@ class QuestionFactory extends Factory
     {
         return [
             'questionnaire_version_id' => QuestionnaireVersion::factory(),
-            'text' => fake()->sentence(8),
-            'help_text' => fake()->sentence(),
-            'score_yes' => fake()->numberBetween(1, 6),
+            'text' => $this->faker->sentence(8),
+            'help_text' => $this->faker->sentence(),
+            'score_yes' => $this->faker->numberBetween(1, 6),
             'score_no' => 0,
-            'display_order' => fake()->unique()->numberBetween(1, 30),
+            'display_order' => $this->faker->unique()->numberBetween(1, 30),
             'is_active' => true,
         ];
     }

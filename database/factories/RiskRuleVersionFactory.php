@@ -16,7 +16,7 @@ class RiskRuleVersionFactory extends Factory
     public function definition(): array
     {
         return [
-            'version_number' => fake()->numberBetween(1, 5),
+            'version_number' => $this->faker->numberBetween(1, 5),
             'title' => 'DEMO DATA - NOT FOR MEDICAL USE',
             'status' => VersionStatus::Published,
             'published_at' => now(),

@@ -16,12 +16,12 @@ class RiskLevelFactory extends Factory
 
     public function definition(): array
     {
-        $name = fake()->words(2, true);
+        $name = $this->faker->words(2, true);
 
         return [
             'risk_rule_version_id' => RiskRuleVersion::factory(),
             'name' => $name,
-            'slug' => Str::slug($name.'-'.fake()->unique()->numberBetween(1, 999)),
+            'slug' => Str::slug($name.'-'.$this->faker->unique()->numberBetween(1, 999)),
             'min_score' => 0,
             'max_score' => 4,
             'semantic_color' => 'success',

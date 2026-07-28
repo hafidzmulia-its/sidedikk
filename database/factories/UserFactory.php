@@ -26,11 +26,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'role' => UserRole::User,
-            'age' => fake()->numberBetween(18, 40),
-            'hpht_date' => now()->subDays(fake()->numberBetween(14, 196))->toDateString(),
+            'age' => $this->faker->numberBetween(18, 40),
+            'hpht_date' => now()->subDays($this->faker->numberBetween(14, 196))->toDateString(),
             'pregnancy_updated_at' => now(),
             'privacy_consent_at' => now(),
             'medical_disclaimer_consent_at' => now(),
