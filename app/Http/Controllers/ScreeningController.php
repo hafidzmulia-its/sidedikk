@@ -29,7 +29,7 @@ class ScreeningController extends Controller
         $nextStep = $this->screeningService->nextStepFor($screening);
 
         if ($nextStep === null) {
-            return redirect()->route('screenings.review', $screening);
+            return $this->finalizeAnsweredScreening($screening);
         }
 
         return redirect()->route('screenings.questions.show', [
@@ -113,7 +113,7 @@ class ScreeningController extends Controller
         $nextStep = $this->screeningService->nextStepFor($screening);
 
         if ($nextStep === null) {
-            return redirect()->route('screenings.review', $screening);
+            return $this->finalizeAnsweredScreening($screening);
         }
 
         return redirect()->route('screenings.questions.show', [
@@ -125,20 +125,21 @@ class ScreeningController extends Controller
     public function review(Request $request, Screening $screening): View|RedirectResponse
     {
         if ($screening->status->value === 'completed') {
-            return redirect()->route('screenings.result', $screening);
+            return redirect()->route('history.show', $screening);
         }
 
         $this->authorize('review', $screening);
 
-        $reviewItems = $this->screeningService->reviewData($screening);
-        $answeredCount = $reviewItems->filter(fn (array $item): bool => in_array($item['answer'], ['yes', 'no'], true))->count();
+        $nextStep = $this->screeningService->nextStepFor($screening);
 
-        return view('screenings.review', [
-            'screening' => $screening->loadMissing(['questionnaireVersion', 'riskRuleVersion']),
-            'reviewItems' => $reviewItems,
-            'totalQuestions' => $reviewItems->count(),
-            'answeredCount' => $answeredCount,
-        ]);
+        if ($nextStep !== null) {
+            return redirect()->route('screenings.questions.show', [
+                'screening' => $screening,
+                'step' => $nextStep,
+            ]);
+        }
+
+        return $this->finalizeAnsweredScreening($screening);
     }
 
     public function submit(SubmitScreeningRequest $request, Screening $screening): RedirectResponse
@@ -164,7 +165,16 @@ class ScreeningController extends Controller
         $this->authorize('view', $screening);
 
         if ($screening->status->value !== 'completed') {
-            return redirect()->route('screenings.review', $screening);
+            $nextStep = $this->screeningService->nextStepFor($screening);
+
+            if ($nextStep !== null) {
+                return redirect()->route('screenings.questions.show', [
+                    'screening' => $screening,
+                    'step' => $nextStep,
+                ]);
+            }
+
+            return $this->finalizeAnsweredScreening($screening);
         }
 
         return view('screenings.result', [
@@ -174,5 +184,17 @@ class ScreeningController extends Controller
                 'riskRuleVersion',
             ]),
         ]);
+    }
+
+    protected function finalizeAnsweredScreening(Screening $screening): RedirectResponse
+    {
+        $submittedScreening = $this->screeningService->submit(
+            $screening->fresh(),
+            $screening->submission_key,
+        );
+
+        return redirect()
+            ->route('screenings.result', $submittedScreening)
+            ->with('status', 'Hasil screening berhasil disimpan.');
     }
 }

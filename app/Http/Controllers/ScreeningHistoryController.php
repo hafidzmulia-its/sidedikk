@@ -30,8 +30,6 @@ class ScreeningHistoryController extends Controller
         return view('history.show', [
             'screening' => $screening->load([
                 'answers',
-                'questionnaireVersion',
-                'riskRuleVersion',
             ]),
         ]);
     }

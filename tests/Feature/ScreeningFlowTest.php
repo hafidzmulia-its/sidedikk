@@ -204,12 +204,6 @@ class ScreeningFlowTest extends TestCase
                     $questions[1]->id => 'no',
                 ],
             ])
-            ->assertRedirect(route('screenings.review', $screening));
-
-        $this->actingAs($user)
-            ->post(route('screenings.submit', $screening), [
-                'submission_key' => $screening->submission_key,
-            ])
             ->assertRedirect(route('screenings.result', $screening));
 
         $screening->refresh();

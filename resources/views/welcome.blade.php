@@ -19,8 +19,8 @@
         @endif
     </head>
     <body class="sid-mobile-preview">
-        <main class="sid-mobile-container relative flex min-h-[97vh] flex-col items-center justify-between overflow-hidden px-5 py-8">
-            <div class="flex w-full flex-col items-center space-y-4 pt-2 text-center">
+        <main class="sid-mobile-container relative flex min-h-[97vh] flex-col overflow-hidden px-5 pb-6 pt-6">
+            <div class="flex w-full flex-col items-center space-y-4 text-center">
                 <div class="relative h-32 w-32">
                     <div class="absolute inset-0 flex items-center justify-center rounded-full bg-[var(--color-primary-soft)] shadow-[0_4px_24px_rgba(149,64,158,0.15)]">
                         <img src="{{ asset('brand/icon-512.png') }}" alt="SIDEDIKK Logo" class="h-full w-full rounded-full object-cover">
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="relative flex flex-1 items-center justify-center py-8">
+            <div class="relative flex min-h-[260px] flex-1 items-center justify-center py-5">
                 <div class="flex aspect-square w-full max-w-[280px] items-center justify-center overflow-hidden rounded-full border-2 border-white bg-white shadow-[0_8px_32px_rgba(149,64,158,0.08)]">
                     <img src="{{ asset('assets/welcome.png') }}" alt="SIDEDIKK" class="h-52 w-52 rounded-full object-cover">
                 </div>
@@ -45,14 +45,11 @@
                 <div class="absolute left-10 top-1/2 h-8 w-8 rounded-full border border-[#eedaf1]"></div>
             </div>
 
-            <div class="w-3/4 space-y-3 pb-4">
+            <div class="mt-3 w-full max-w-[280px] space-y-3">
                 <a href="{{ auth()->check() ? route('dashboard') : route('login') }}" class="sid-button-primary flex h-14 w-full items-center justify-center gap-2 text-sm font-semibold">
                     Masuk SIDEDIKK
                     <span class="material-symbols-outlined text-xl">arrow_forward</span>
                 </a>
-                <button type="button" data-pwa-install class="sid-button-secondary hidden h-12 w-full text-sm font-semibold">
-                    Pasang Aplikasi
-                </button>
             </div>
         </main>
     </body>

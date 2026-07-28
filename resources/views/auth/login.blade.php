@@ -7,12 +7,12 @@
         <div class="h-10 w-10"></div>
     </header>
 
-    <main class="flex min-h-[calc(100vh-56px)] flex-col px-5 py-6">
+    <main class="flex min-h-[calc(100vh-56px)] flex-col px-5 pb-6 pt-5">
         <!-- <div class="mb-8 mt-4 text-center md:text-left">
             <h1 class="sid-title-main mb-2">Masuk</h1>
             <p class="text-sm font-normal text-[#50434e]">Masuk untuk melanjutkan screening dan melihat riwayat Anda.</p>
         </div> -->
-        <div class="mb-6 text-center">
+        <div class="mb-5 text-center">
             <img src="{{ asset('brand/icon-512.png') }}" alt="SIDEDIKK" class="mx-auto mb-4 h-24 w-24 rounded-full bg-white p-2 object-cover shadow-sm">
             <h2 class="sid-title-main mb-2 text-[var(--color-primary)]">Selamat Datang, Ibu</h2>
             <p class="text-sm font-normal text-[#50434e]">Mari mulai perjalanan kehamilan yang sehat dan aman bersama SIDEDIKK.</p>
@@ -24,7 +24,7 @@
 
         <x-auth-session-status :status="session('status')" />
 
-        <form method="POST" action="{{ route('login') }}" class="mb-8 flex flex-1 flex-col gap-4">
+        <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
             @csrf
 
             <div class="flex flex-col gap-1">
@@ -54,7 +54,7 @@
                 </div>
             @endif
 
-            <div class="mt-auto flex flex-col gap-4 pb-4 pt-6">
+            <div class="mt-2 flex flex-col gap-4 pb-2 pt-2">
                 <button type="submit" class="flex h-14 w-full items-center justify-center rounded-full bg-[#95409e] text-sm font-semibold text-white shadow-md transition-all hover:opacity-90 active:scale-[0.98]">
                     Masuk
                 </button>

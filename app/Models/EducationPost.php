@@ -68,6 +68,64 @@ class EducationPost extends Model
         return $this->sanitizeDemoPrefix($this->body);
     }
 
+    /**
+     * @return array<int, array{type: string, title?: string|null, text?: string, items?: array<int, string>}>
+     */
+    public function getDisplayBodyBlocksAttribute(): array
+    {
+        $content = $this->display_body;
+
+        if ($content === '') {
+            return [];
+        }
+
+        $sections = preg_split("/\R{2,}/", trim($content)) ?: [];
+        $blocks = [];
+
+        foreach ($sections as $section) {
+            $lines = array_values(array_filter(array_map(
+                static fn (string $line): string => trim($line),
+                preg_split("/\R/", trim($section)) ?: [],
+            )));
+
+            if ($lines === []) {
+                continue;
+            }
+
+            $bulletItems = array_values(array_map(
+                static fn (string $line): string => trim(preg_replace('/^[-*•]\s*/u', '', $line) ?? $line),
+                array_filter($lines, static fn (string $line): bool => preg_match('/^[-*•]\s+/u', $line) === 1),
+            ));
+
+            if (count($bulletItems) === count($lines)) {
+                $blocks[] = [
+                    'type' => 'list',
+                    'title' => null,
+                    'items' => $bulletItems,
+                ];
+
+                continue;
+            }
+
+            if (count($lines) > 1 && count($bulletItems) === count($lines) - 1 && preg_match('/^[-*•]\s+/u', $lines[0]) !== 1) {
+                $blocks[] = [
+                    'type' => 'list',
+                    'title' => rtrim($lines[0], ':'),
+                    'items' => $bulletItems,
+                ];
+
+                continue;
+            }
+
+            $blocks[] = [
+                'type' => 'paragraph',
+                'text' => implode("\n", $lines),
+            ];
+        }
+
+        return $blocks;
+    }
+
     protected function sanitizeDemoPrefix(?string $value): string
     {
         $text = trim((string) $value);

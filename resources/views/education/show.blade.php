@@ -19,13 +19,32 @@
                 </div>
 
                 <h1 class="text-[22px] font-semibold leading-[30px] text-[#221825]">{{ $post->title }}</h1>
-                <p class="text-sm leading-7 text-slate-600">{{ $post->display_excerpt }}</p>
+                <div class="rounded-[20px] border border-[#f0e2f3] bg-[#fffafd] p-4">
+                    <p class="text-sm leading-7 text-slate-600">{{ $post->display_excerpt }}</p>
+                </div>
 
                 <div class="space-y-4 text-sm leading-7 text-slate-700">
-                    @foreach (preg_split("/\\n\\n/", trim($post->display_body)) as $section)
-                        <div class="rounded-[20px] border bg-white/70 p-4">
-                            {!! nl2br(e($section)) !!}
-                        </div>
+                    @foreach ($post->display_body_blocks as $block)
+                        @if ($block['type'] === 'list')
+                            <section class="rounded-[22px] border border-[#f0e2f3] bg-white p-4 shadow-[0_8px_24px_rgba(149,64,158,0.04)]">
+                                @if (! empty($block['title']))
+                                    <h2 class="text-sm font-semibold text-[#221825]">{{ $block['title'] }}</h2>
+                                @endif
+
+                                <ul class="{{ ! empty($block['title']) ? 'mt-3' : '' }} space-y-3">
+                                    @foreach ($block['items'] as $item)
+                                        <li class="flex items-start gap-3">
+                                            <span class="mt-2 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[var(--color-primary)]"></span>
+                                            <span class="flex-1 leading-7 text-slate-700">{{ $item }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </section>
+                        @else
+                            <div class="rounded-[22px] border border-[#f0e2f3] bg-white p-4 shadow-[0_8px_24px_rgba(149,64,158,0.04)]">
+                                {!! nl2br(e($block['text'] ?? '')) !!}
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>

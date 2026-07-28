@@ -79,7 +79,7 @@
 
             <div id="screening-submit-area" class="pt-1">
                 <button type="submit" class="mx-auto flex h-10 w-full max-w-[220px] items-center justify-center rounded-full bg-[#95409e] px-5 text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(149,64,158,0.12)] transition-all hover:opacity-90 active:scale-95">
-                    {{ $answeredCount === $totalSteps ? 'Lanjut ke Review' : 'Simpan Jawaban' }}
+                    {{ $answeredCount === $totalSteps ? 'Kirim Jawaban' : 'Simpan Jawaban' }}
                 </button>
             </div>
         </form>

@@ -61,7 +61,7 @@
                         </div>
 
                         @if ($activeScreening)
-                            <a href="{{ $activeScreeningNextStep ? route('screenings.questions.show', ['screening' => $activeScreening, 'step' => $activeScreeningNextStep]) : route('screenings.review', $activeScreening) }}" class="text-[#82737f] transition-colors hover:text-[var(--color-primary)]">
+                            <a href="{{ $activeScreeningNextStep ? route('screenings.questions.show', ['screening' => $activeScreening, 'step' => $activeScreeningNextStep]) : route('screenings.result', $activeScreening) }}" class="text-[#82737f] transition-colors hover:text-[var(--color-primary)]">
                                 <span class="material-symbols-outlined">chevron_right</span>
                             </a>
                         @else
