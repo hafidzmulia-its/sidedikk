@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+Route::view('/install', 'pwa.install')->name('pwa.install');
 Route::get('/offline.html', fn () => response()->file(public_path('offline.html'), [
     'Content-Type' => 'text/html; charset=UTF-8',
 ]))->name('pwa.offline');

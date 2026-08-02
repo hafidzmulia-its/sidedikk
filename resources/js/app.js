@@ -56,6 +56,9 @@ function initializeAdminCharts() {
 
 function registerPwaInstallPrompt() {
     const installButtons = document.querySelectorAll('[data-pwa-install]');
+    const promptInstallButtons = document.querySelectorAll('[data-pwa-install-prompt]');
+    const installPageStates = document.querySelectorAll('[data-pwa-install-state]');
+    const installPageNotes = document.querySelectorAll('[data-pwa-install-note]');
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
     let deferredPrompt = null;
@@ -66,15 +69,43 @@ function registerPwaInstallPrompt() {
         });
     }
 
+    function setPromptButtonEnabled(enabled, visible = true) {
+        promptInstallButtons.forEach((button) => {
+            button.disabled = !enabled;
+            button.classList.toggle('hidden', !visible);
+            button.classList.toggle('opacity-50', !enabled);
+            button.classList.toggle('cursor-not-allowed', !enabled);
+        });
+    }
+
+    function setInstallPageState(state) {
+        installPageStates.forEach((element) => {
+            element.classList.toggle('hidden', element.dataset.pwaInstallState !== state);
+        });
+    }
+
+    function setInstallPageNote(state) {
+        installPageNotes.forEach((element) => {
+            element.classList.toggle('hidden', element.dataset.pwaInstallNote !== state);
+        });
+    }
+
     function removeInstallSheets() {
         document.querySelectorAll('[data-pwa-install-sheet]').forEach((sheet) => {
             sheet.remove();
         });
     }
 
-    if (isStandalone || installButtons.length === 0) {
+    if (isStandalone) {
         setInstallButtonVisibility(false);
+        setPromptButtonEnabled(false, false);
+        setInstallPageState('installed');
+        setInstallPageNote('installed');
         removeInstallSheets();
+        return;
+    }
+
+    if (installButtons.length === 0 && promptInstallButtons.length === 0 && installPageStates.length === 0) {
         return;
     }
 
@@ -133,27 +164,49 @@ function registerPwaInstallPrompt() {
     async function promptInstall() {
         if (isIos) {
             showIosInstallSheet();
+            setInstallPageState('ios');
+            setInstallPageNote('ios');
             return;
         }
 
         if (!deferredPrompt) {
             showBrowserInstallSheet();
+            setInstallPageState('unsupported');
+            setInstallPageNote('unsupported');
             return;
         }
 
         removeInstallSheets();
 
         deferredPrompt.prompt();
-        await deferredPrompt.userChoice.catch(() => null);
+        const choice = await deferredPrompt.userChoice.catch(() => null);
+
+        if (choice?.outcome !== 'accepted') {
+            setPromptButtonEnabled(false);
+            setInstallPageState('unsupported');
+            setInstallPageNote('unsupported');
+        }
 
         deferredPrompt = null;
     }
 
     setInstallButtonVisibility(true);
+    setPromptButtonEnabled(false);
+
+    if (isIos) {
+        setInstallPageState('ios');
+        setInstallPageNote('ios');
+    } else {
+        setInstallPageState('unsupported');
+        setInstallPageNote('unsupported');
+    }
 
     window.addEventListener('beforeinstallprompt', (event) => {
         event.preventDefault();
         deferredPrompt = event;
+        setPromptButtonEnabled(true);
+        setInstallPageState('ready');
+        setInstallPageNote('ready');
         promptInstall();
     });
 
@@ -161,9 +214,18 @@ function registerPwaInstallPrompt() {
         deferredPrompt = null;
         removeInstallSheets();
         setInstallButtonVisibility(false);
+        setPromptButtonEnabled(false, false);
+        setInstallPageState('installed');
+        setInstallPageNote('installed');
     });
 
     installButtons.forEach((button) => {
+        button.addEventListener('click', async () => {
+            await promptInstall();
+        });
+    });
+
+    promptInstallButtons.forEach((button) => {
         button.addEventListener('click', async () => {
             await promptInstall();
         });
