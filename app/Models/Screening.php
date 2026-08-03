@@ -38,9 +38,16 @@ class Screening extends Model
     protected function casts(): array
     {
         return [
+            'user_id' => 'integer',
+            'questionnaire_version_id' => 'integer',
+            'risk_rule_version_id' => 'integer',
             'status' => ScreeningStatus::class,
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
+            'gestational_age_weeks_snapshot' => 'integer',
+            'gestational_age_days_snapshot' => 'integer',
+            'total_score' => 'integer',
+            'max_score' => 'integer',
         ];
     }
 
