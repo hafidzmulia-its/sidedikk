@@ -10,7 +10,251 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/app.css">
+    <style>
+        :root {
+            --color-primary: #95409e;
+            --color-primary-soft: #f4e8f7;
+            --color-surface: #ffffff;
+            --color-text: #2d2530;
+            --color-text-muted: #50434e;
+            --color-border: #d8c3de;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", system-ui, sans-serif;
+            background: #fffdfd;
+            color: var(--color-text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        .landing-body {
+            min-height: 100vh;
+        }
+
+        .landing-shell {
+            display: flex;
+            min-height: 95vh;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1.25rem;
+        }
+
+        .landing-card {
+            position: relative;
+            display: flex;
+            width: 100%;
+            max-width: 24rem;
+            min-height: min(95vh, 52rem);
+            flex-direction: column;
+            overflow: hidden;
+            padding: 1.5rem 1.25rem;
+        }
+
+        .landing-logo-wrap {
+            display: flex;
+            justify-content: center;
+        }
+
+        .landing-logo-ring {
+            display: flex;
+            height: 8rem;
+            width: 8rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: var(--color-primary-soft);
+            box-shadow: 0 4px 24px rgba(149, 64, 158, 0.15);
+        }
+
+        .landing-logo {
+            height: 100%;
+            width: 100%;
+            border-radius: 999px;
+            object-fit: cover;
+        }
+
+        .landing-copy {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .landing-copy h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--color-primary);
+        }
+
+        .landing-copy h2 {
+            margin: 0.5rem 0 0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .landing-copy p {
+            margin: 0.75rem auto 0;
+            max-width: 17.5rem;
+            font-size: 0.75rem;
+            line-height: 1.65;
+            font-weight: 400;
+            color: var(--color-text-muted);
+        }
+
+        .landing-visual {
+            position: relative;
+            display: flex;
+            min-height: 16.25rem;
+            flex: 1 1 auto;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem 0;
+        }
+
+        .landing-visual-frame {
+            display: flex;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            max-width: 17.5rem;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #ffffff;
+            border-radius: 999px;
+            background: #ffffff;
+            box-shadow: 0 8px 32px rgba(149, 64, 158, 0.08);
+        }
+
+        .landing-hero {
+            height: 13rem;
+            width: 13rem;
+            border-radius: 999px;
+            object-fit: cover;
+        }
+
+        .landing-dot,
+        .landing-orbit {
+            position: absolute;
+            border-radius: 999px;
+        }
+
+        .landing-dot-top {
+            top: 25%;
+            right: 1.5rem;
+            height: 1.5rem;
+            width: 1.5rem;
+            background: var(--color-primary-soft);
+        }
+
+        .landing-dot-bottom {
+            bottom: 33%;
+            left: 1.5rem;
+            height: 1rem;
+            width: 1rem;
+            background: #fcaaff;
+        }
+
+        .landing-orbit {
+            top: 50%;
+            left: 2.5rem;
+            height: 2rem;
+            width: 2rem;
+            border: 1px solid #eedaf1;
+            transform: translateY(-50%);
+        }
+
+        .landing-actions {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 17.5rem;
+        }
+
+        .landing-button {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+
+        .landing-button:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .landing-button-primary {
+            position: relative;
+            min-height: 3.5rem;
+            padding: 0.875rem 1.25rem;
+            color: #ffffff;
+            background: var(--color-primary);
+            box-shadow: 0 12px 28px rgba(149, 64, 158, 0.18);
+        }
+
+        .landing-button-primary .material-symbols-outlined {
+            position: absolute;
+            right: 1.25rem;
+            font-size: 1.25rem;
+        }
+
+        .landing-button-secondary {
+            min-height: 3rem;
+            margin-top: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            color: var(--color-primary);
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 8px 22px rgba(149, 64, 158, 0.08);
+        }
+
+        .landing-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        @media (min-width: 768px) {
+            .landing-shell {
+                padding: 2rem;
+            }
+
+            .landing-card {
+                max-width: 26rem;
+                padding: 2rem 1.5rem;
+                border-radius: 2rem;
+                box-shadow: 0 16px 44px rgba(149, 64, 158, 0.08);
+            }
+        }
+    </style>
 </head>
 <body class="landing-body">
     <main class="landing-shell">
