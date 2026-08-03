@@ -28,6 +28,9 @@ class RiskLevel extends Model
     {
         return [
             'is_active' => 'boolean',
+            'min_score' => 'integer',
+            'max_score' => 'integer',
+            'display_priority' => 'integer',
         ];
     }
 
