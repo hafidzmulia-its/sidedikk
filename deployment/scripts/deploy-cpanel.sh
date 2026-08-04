@@ -10,6 +10,7 @@ DEPLOY_INDEX_SOURCE="deployment/app-public/index.php"
 DEPLOY_HTACCESS_SOURCE="deployment/app-public/.htaccess"
 PUBLIC_MAIN_SOURCE_DIR="deployment/main-domain"
 PUBLIC_SOURCE_DIR="public"
+BUILD_MANIFEST="$PUBLIC_SOURCE_DIR/build/manifest.json"
 PUBLIC_APP_BACKUP_DIR="/home/ewyjotxg/backups/sidedikk-app"
 
 log() {
@@ -30,13 +31,16 @@ fi
 [[ -f artisan ]] || fail "File artisan tidak ditemukan"
 [[ -f composer.json ]] || fail "composer.json tidak ditemukan"
 [[ -f "$PUBLIC_SOURCE_DIR/index.php" ]] || fail "public/index.php tidak ditemukan"
+[[ -f "$BUILD_MANIFEST" ]] || fail "Manifest build frontend tidak ditemukan: $BUILD_MANIFEST"
 [[ -d "$PUBLIC_APP_DIR" ]] || fail "Direktori tujuan aplikasi tidak ditemukan: $PUBLIC_APP_DIR"
 [[ -f "$DEPLOY_INDEX_SOURCE" ]] || fail "Deployment index tidak ditemukan: $DEPLOY_INDEX_SOURCE"
 [[ -f "$DEPLOY_HTACCESS_SOURCE" ]] || fail "Deployment .htaccess tidak ditemukan: $DEPLOY_HTACCESS_SOURCE"
 [[ -d "$PUBLIC_MAIN_SOURCE_DIR" ]] || fail "Direktori landing page tidak ditemukan: $PUBLIC_MAIN_SOURCE_DIR"
 
-if [[ -f package.json ]]; then
-  command -v npm >/dev/null 2>&1 || fail "npm tidak tersedia untuk build frontend"
+HAS_NPM="false"
+
+if command -v npm >/dev/null 2>&1; then
+  HAS_NPM="true"
 fi
 
 mkdir -p "$PUBLIC_APP_BACKUP_DIR"
@@ -54,8 +58,12 @@ log "Menginstal dependency Composer production"
 composer install --no-dev --optimize-autoloader --no-interaction
 
 if [[ -f package.json ]]; then
-  log "Membangun asset frontend production"
-  npm run build
+  if [[ "$HAS_NPM" == "true" ]]; then
+    log "Membangun asset frontend production"
+    npm run build
+  else
+    log "npm tidak tersedia di server. Menggunakan asset build yang sudah dikomit dari lokal."
+  fi
 fi
 
 log "Membersihkan cache Laravel"
