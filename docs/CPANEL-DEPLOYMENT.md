@@ -7,6 +7,51 @@ Panduan ini menyiapkan arsitektur:
 - main domain statis: `https://sidedikk.my.id`
 - Laravel app + PWA: `https://app.sidedikk.my.id`
 
+## Catatan Permanen: Issue Composer Yang Sebenarnya Bukan Composer
+
+Kalau setelah deploy muncul pesan:
+
+```text
+Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.3.0".
+```
+
+anggap ini sebagai masalah **PHP web runtime cPanel kembali ke 8.2**, bukan masalah `composer install`.
+
+Fakta penting yang harus selalu diingat:
+
+- CLI server bisa saja sudah `PHP 8.4`
+- tetapi web subdomain `app.sidedikk.my.id` masih bisa dilayani `PHP 8.2`
+- jika itu terjadi, Laravel tidak gagal karena Composer CLI, tetapi gagal saat request web membaca dependency yang memang butuh PHP `>= 8.3`
+
+Aturan tetap setiap deploy:
+
+1. Jangan pernah menambahkan handler cPanel seperti `ea-php82` ke `/home/ewyjotxg/public_html/app/.htaccess`.
+2. File deployment yang benar untuk app adalah:
+   - `deployment/app-public/index.php`
+   - `deployment/app-public/.htaccess`
+3. PHP account default harus tetap `8.4`.
+4. Jika panel per-domain terkunci, jangan override lagi dari `.htaccess` dengan handler PHP lama.
+5. Kalau pesan Composer muncul lagi, cek web runtime lebih dulu, bukan Composer.
+
+Checklist cepat saat error ini muncul lagi:
+
+```bash
+cd /home/ewyjotxg/public_html/app
+sed -n '1,120p' .htaccess
+```
+
+Pastikan output **tidak** berisi blok seperti:
+
+```apache
+# php -- BEGIN cPanel-generated handler, do not edit
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+```
+
+Kalau blok itu muncul, hapus. Itulah penyebab paling sering issue ini berulang.
+
 ## Arsitektur Target
 
 - Laravel source: `/home/ewyjotxg/sidedikk`
@@ -182,6 +227,12 @@ Sinkronisasi hanya isi `public/` ke document root app:
 rsync -av /home/ewyjotxg/sidedikk/public/ /home/ewyjotxg/public_html/app/
 cp /home/ewyjotxg/sidedikk/deployment/app-public/index.php /home/ewyjotxg/public_html/app/index.php
 cp /home/ewyjotxg/sidedikk/deployment/app-public/.htaccess /home/ewyjotxg/public_html/app/.htaccess
+```
+
+Sesudah copy, verifikasi lagi bahwa `.htaccess` app tidak membawa handler PHP cPanel lama:
+
+```bash
+sed -n '1,120p' /home/ewyjotxg/public_html/app/.htaccess
 ```
 
 Jangan copy:

@@ -37,6 +37,10 @@ fi
 [[ -f "$DEPLOY_HTACCESS_SOURCE" ]] || fail "Deployment .htaccess tidak ditemukan: $DEPLOY_HTACCESS_SOURCE"
 [[ -d "$PUBLIC_MAIN_SOURCE_DIR" ]] || fail "Direktori landing page tidak ditemukan: $PUBLIC_MAIN_SOURCE_DIR"
 
+if grep -Eq 'php -- BEGIN cPanel-generated handler|AddHandler application/x-httpd-ea-php' "$DEPLOY_HTACCESS_SOURCE"; then
+  fail "deployment/app-public/.htaccess masih memaksa handler PHP cPanel. Ini bisa mengembalikan web runtime ke PHP 8.2 dan memunculkan error Composer platform issue."
+fi
+
 HAS_NPM="false"
 
 if command -v npm >/dev/null 2>&1; then
@@ -91,5 +95,7 @@ fi
 
 log "Deploy public app selesai"
 log "Landing page static selesai disinkronkan"
+log "CATATAN PENTING: jika app menampilkan 'Composer detected issues in your platform', akar masalahnya adalah PHP web runtime subdomain kembali ke 8.2, bukan Composer CLI."
+log "Pastikan app.sidedikk.my.id tetap memakai PHP 8.4 sebagai account default dan jangan pernah menambahkan handler cPanel ea-php82 ke public_html/app/.htaccess."
 log "Migrasi production tidak dijalankan otomatis. Jalankan manual setelah backup database diverifikasi."
 log "File .env tidak disentuh oleh script ini."
