@@ -196,6 +196,14 @@ cd /home/ewyjotxg/sidedikk
 composer install --no-dev --optimize-autoloader --no-interaction
 ```
 
+Untuk deploy rutin saat `composer.json` dan `composer.lock` tidak berubah, Composer boleh dilewati agar tidak terganggu noise dari Composer cPanel:
+
+```bash
+SKIP_COMPOSER=true bash deployment/scripts/deploy-cpanel.sh
+```
+
+Pakai mode ini hanya jika dependency PHP memang tidak berubah.
+
 ## Langkah 10. Build Frontend Production Assets
 
 Jika Node dan npm tersedia di server:

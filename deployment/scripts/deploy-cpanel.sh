@@ -13,6 +13,7 @@ PUBLIC_SOURCE_DIR="public"
 BUILD_MANIFEST="$PUBLIC_SOURCE_DIR/build/manifest.json"
 PUBLIC_APP_BACKUP_DIR="/home/ewyjotxg/backups/sidedikk-app"
 COMPOSER_BIN="${COMPOSER_BIN:-$(command -v composer 2>/dev/null || true)}"
+SKIP_COMPOSER="${SKIP_COMPOSER:-false}"
 
 log() {
   printf '[%s] %s\n' "$APP_NAME" "$1"
@@ -60,8 +61,12 @@ else
   cp -R "$PUBLIC_APP_DIR/." "$BACKUP_TARGET/"
 fi
 
-log "Menginstal dependency Composer production"
-php -d error_reporting=8191 "$COMPOSER_BIN" install --no-dev --optimize-autoloader --no-interaction
+if [[ "$SKIP_COMPOSER" == "true" ]]; then
+  log "SKIP_COMPOSER=true, melewati composer install. Gunakan hanya bila composer.json dan composer.lock tidak berubah."
+else
+  log "Menginstal dependency Composer production"
+  php -d error_reporting=8191 "$COMPOSER_BIN" install --no-dev --optimize-autoloader --no-interaction
+fi
 
 if [[ -f package.json ]]; then
   if [[ "$HAS_NPM" == "true" ]]; then
@@ -100,5 +105,6 @@ log "Landing page static selesai disinkronkan"
 log "CATATAN PENTING: jika app menampilkan 'Composer detected issues in your platform', akar masalahnya adalah PHP web runtime subdomain kembali ke 8.2, bukan Composer CLI."
 log "Pastikan app.sidedikk.my.id tetap memakai PHP 8.4 sebagai account default dan jangan pernah menambahkan handler cPanel ea-php82 ke public_html/app/.htaccess."
 log "Jika deploy mengeluarkan spam Deprecation Notice dari Composer cPanel, itu noise dari binary Composer lama. Script ini menjalankan Composer lewat PHP dengan error_reporting yang menonaktifkan notice deprecated."
+log "Untuk deploy rutin tanpa perubahan dependency, jalankan: SKIP_COMPOSER=true bash deployment/scripts/deploy-cpanel.sh"
 log "Migrasi production tidak dijalankan otomatis. Jalankan manual setelah backup database diverifikasi."
 log "File .env tidak disentuh oleh script ini."
