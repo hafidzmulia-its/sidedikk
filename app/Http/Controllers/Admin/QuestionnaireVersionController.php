@@ -18,7 +18,7 @@ class QuestionnaireVersionController extends Controller
     public function index(): View
     {
         $questionnaire = $this->editableQuestionnaireQuery()
-            ->with(['questions', 'publisher'])
+            ->with($this->questionnaireRelations())
             ->first();
 
         return view('admin.questionnaires.index', [
@@ -94,7 +94,7 @@ class QuestionnaireVersionController extends Controller
 
     public function show(QuestionnaireVersion $questionnaire): View
     {
-        $questionnaire->load(['questions', 'publisher']);
+        $questionnaire->load($this->questionnaireRelations());
 
         return view('admin.questionnaires.show', [
             'version' => $questionnaire,
@@ -104,7 +104,7 @@ class QuestionnaireVersionController extends Controller
 
     public function edit(QuestionnaireVersion $questionnaire): View
     {
-        $questionnaire->load('questions');
+        $questionnaire->load($this->questionnaireRelations());
 
         return $this->formView(
             $questionnaire,
@@ -212,6 +212,14 @@ class QuestionnaireVersionController extends Controller
             )
             ->latest('updated_at')
             ->latest('id');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function questionnaireRelations(): array
+    {
+        return ['questions', 'publisher'];
     }
 
     /**

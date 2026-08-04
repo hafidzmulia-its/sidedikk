@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Preview Aturan Risiko</h1>
-            </div>
+        <x-admin.page-header
+            title="Preview Aturan Risiko"
+            description="Periksa level risiko aktif, rentang skor, dan status draft atau published sebelum dipakai screening."
+        >
             <a href="{{ route('admin.risk-rules.index') }}" class="sid-button-secondary">Kembali</a>
-        </div>
+        </x-admin.page-header>
     </x-slot>
 
     <div class="space-y-6">

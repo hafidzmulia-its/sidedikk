@@ -7,14 +7,10 @@
     </x-slot> -->
 
     <x-slot name="header">
-        <header class="pb-4">
-            <div class="flex items-start justify-between gap-4">
-                <div class="min-w-0">
-                    <h1 class="text-2xl font-semibold leading-7 text-[var(--color-primary)]">Halo, Admin</h1>
-                    <p class="mt-1 text-base font-normal text-[#82737f]">Selamat datang di panel admin SIDEDIKK.</p>
-                </div>
-            </div>
-        </header>
+        <x-admin.page-header
+            title="Ringkasan Operasional"
+            description="Pantau pengguna, screening, pertanyaan aktif, dan artikel dari satu dashboard admin yang konsisten."
+        />
     </x-slot>
     <div class="space-y-6">
         @include('admin.partials.nav')

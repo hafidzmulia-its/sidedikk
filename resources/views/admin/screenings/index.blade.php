@@ -1,11 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-[2.25rem] font-extrabold leading-[1.05] tracking-tight text-slate-950 sm:text-3xl">Screening Selesai</h1>
-            </div>
-        </div>
+        <x-admin.page-header
+            title="Screening Selesai"
+            description="Tinjau hasil screening yang sudah selesai, lengkap dengan filter cepat untuk analisis operasional."
+        />
     </x-slot>
 
     <div class="space-y-6">

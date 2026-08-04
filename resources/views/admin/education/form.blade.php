@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">{{ $pageTitle }}</h1>
-            </div>
+        <x-admin.page-header
+            :title="$pageTitle"
+            description="Atur judul, ringkasan, isi, status, dan cover artikel dari form admin yang seragam."
+        >
             <a href="{{ route('admin.education.index') }}" class="sid-button-secondary">Kembali</a>
-        </div>
+        </x-admin.page-header>
     </x-slot>
 
     <div class="space-y-6">

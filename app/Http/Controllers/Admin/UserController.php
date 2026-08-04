@@ -38,13 +38,13 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
+        $user->loadCount([
+            'screenings as completed_screenings_count' => fn ($query) => $query->completed(),
+        ]);
+
         return view('admin.users.show', [
             'user' => $user,
-            'completedScreeningsCount' => $user->newQuery()
-                ->findOrFail($user->id)
-                ->screenings()
-                ->completed()
-                ->count(),
+            'completedScreeningsCount' => $user->completed_screenings_count,
         ]);
     }
 }

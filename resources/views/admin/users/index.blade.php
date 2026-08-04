@@ -1,11 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-[2.25rem] font-extrabold leading-[1.05] tracking-tight text-slate-950 sm:text-3xl">Pengguna</h1>
-            </div>
-        </div>
+        <x-admin.page-header
+            title="Pengguna"
+            description="Kelola daftar akun pengguna dan admin, lalu pantau data dasar yang terhubung dengan screening."
+        />
     </x-slot>
 
     <div class="space-y-6">

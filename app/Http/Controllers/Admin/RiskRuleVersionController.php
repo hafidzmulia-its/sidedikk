@@ -104,7 +104,7 @@ class RiskRuleVersionController extends Controller
             ->first();
 
         return view('admin.risk-rules.show', [
-            'version' => $riskRule->load(['riskLevels', 'publisher']),
+            'version' => $riskRule->load($this->versionRelations()),
             'currentQuestionnaireMaxScore' => $publishedQuestionnaire?->max_score_snapshot,
         ]);
     }
@@ -113,8 +113,10 @@ class RiskRuleVersionController extends Controller
     {
         abort_unless($riskRule->status === VersionStatus::Draft, 404);
 
+        $riskRule->load($this->versionRelations());
+
         return view('admin.risk-rules.form', [
-            'version' => $riskRule->load('riskLevels'),
+            'version' => $riskRule,
             'riskLevels' => $riskRule->riskLevels->map(fn ($level) => [
                 'name' => $level->name,
                 'slug' => $level->slug,
@@ -227,5 +229,13 @@ class RiskRuleVersionController extends Controller
                 'is_active' => (bool) ($riskLevel['is_active'] ?? false),
             ]);
         }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function versionRelations(): array
+    {
+        return ['riskLevels', 'publisher'];
     }
 }

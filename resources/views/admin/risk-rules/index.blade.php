@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">Versi Aturan Risiko</h1>
-            </div>
+        <x-admin.page-header
+            title="Versi Aturan Risiko"
+            description="Kelola aturan klasifikasi risiko dengan pola tampilan dan aksi yang konsisten di seluruh panel admin."
+        >
             <a href="{{ route('admin.risk-rules.create') }}" class="sid-button-primary">Buat Draft</a>
-        </div>
+        </x-admin.page-header>
     </x-slot>
 
     <div class="space-y-6">

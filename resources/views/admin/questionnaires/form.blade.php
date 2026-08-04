@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm font-medium text-slate-500">Panel Admin SIDEDIKK</p>
-                <h1 class="mt-1 text-[2rem] font-semibold leading-tight text-slate-950">{{ $pageTitle }}</h1>
-            </div>
+        <x-admin.page-header
+            :title="$pageTitle"
+            description="Kelola teks, bantuan singkat, skor, dan status aktif pertanyaan dari satu halaman kerja admin."
+        >
             <a href="{{ route('admin.questionnaires.index') }}" class="sid-button-secondary">Kembali</a>
-        </div>
+        </x-admin.page-header>
     </x-slot>
 
     @php
