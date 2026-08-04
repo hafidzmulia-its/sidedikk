@@ -52,6 +52,12 @@ Pastikan output **tidak** berisi blok seperti:
 
 Kalau blok itu muncul, hapus. Itulah penyebab paling sering issue ini berulang.
 
+Catatan terpisah:
+
+- Jika saat `bash deployment/scripts/deploy-cpanel.sh` muncul banyak `Deprecation Notice` dari Composer cPanel, itu biasanya **bukan deploy gagal**.
+- Itu hanya noise dari binary Composer lama milik hosting saat berjalan di PHP 8.4.
+- Selama `composer install`, `php artisan optimize`, dan sinkronisasi file tetap selesai, deploy masih dianggap sukses.
+
 ## Arsitektur Target
 
 - Laravel source: `/home/ewyjotxg/sidedikk`

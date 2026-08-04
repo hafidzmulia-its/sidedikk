@@ -12,6 +12,7 @@ PUBLIC_MAIN_SOURCE_DIR="deployment/main-domain"
 PUBLIC_SOURCE_DIR="public"
 BUILD_MANIFEST="$PUBLIC_SOURCE_DIR/build/manifest.json"
 PUBLIC_APP_BACKUP_DIR="/home/ewyjotxg/backups/sidedikk-app"
+COMPOSER_BIN="${COMPOSER_BIN:-$(command -v composer 2>/dev/null || true)}"
 
 log() {
   printf '[%s] %s\n' "$APP_NAME" "$1"
@@ -36,6 +37,7 @@ fi
 [[ -f "$DEPLOY_INDEX_SOURCE" ]] || fail "Deployment index tidak ditemukan: $DEPLOY_INDEX_SOURCE"
 [[ -f "$DEPLOY_HTACCESS_SOURCE" ]] || fail "Deployment .htaccess tidak ditemukan: $DEPLOY_HTACCESS_SOURCE"
 [[ -d "$PUBLIC_MAIN_SOURCE_DIR" ]] || fail "Direktori landing page tidak ditemukan: $PUBLIC_MAIN_SOURCE_DIR"
+[[ -n "$COMPOSER_BIN" ]] || fail "composer tidak tersedia di server"
 
 if grep -Eq 'php -- BEGIN cPanel-generated handler|AddHandler application/x-httpd-ea-php' "$DEPLOY_HTACCESS_SOURCE"; then
   fail "deployment/app-public/.htaccess masih memaksa handler PHP cPanel. Ini bisa mengembalikan web runtime ke PHP 8.2 dan memunculkan error Composer platform issue."
@@ -59,7 +61,7 @@ else
 fi
 
 log "Menginstal dependency Composer production"
-composer install --no-dev --optimize-autoloader --no-interaction
+php -d error_reporting=8191 "$COMPOSER_BIN" install --no-dev --optimize-autoloader --no-interaction
 
 if [[ -f package.json ]]; then
   if [[ "$HAS_NPM" == "true" ]]; then
@@ -97,5 +99,6 @@ log "Deploy public app selesai"
 log "Landing page static selesai disinkronkan"
 log "CATATAN PENTING: jika app menampilkan 'Composer detected issues in your platform', akar masalahnya adalah PHP web runtime subdomain kembali ke 8.2, bukan Composer CLI."
 log "Pastikan app.sidedikk.my.id tetap memakai PHP 8.4 sebagai account default dan jangan pernah menambahkan handler cPanel ea-php82 ke public_html/app/.htaccess."
+log "Jika deploy mengeluarkan spam Deprecation Notice dari Composer cPanel, itu noise dari binary Composer lama. Script ini menjalankan Composer lewat PHP dengan error_reporting yang menonaktifkan notice deprecated."
 log "Migrasi production tidak dijalankan otomatis. Jalankan manual setelah backup database diverifikasi."
 log "File .env tidak disentuh oleh script ini."
